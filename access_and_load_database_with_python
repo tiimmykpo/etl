@@ -1,0 +1,55 @@
+import sqlite3
+import pandas as pd
+conn = sqlite3.connect('STAFF.db')
+
+#Create and Load the Table
+table_name = 'Departments'
+attribute_list = ['DEPT_ID', 'DEPT_NAME', 'MANAGER_ID', 'LOC_ID']
+
+#Read the CSV file
+
+file_path = '/home/project/Departments.csv'
+df = pd.read_csv(file_path, names = attribute_list)
+
+df.to_sql(table_name, conn, if_exists = 'replace', index =False)
+print('Table is ready')
+
+#Running Basic queries on data
+query_statement = f"SELECT * FROM {table_name}"
+query_output = pd.read_sql(query_statement, conn)
+print(query_statement)
+print(query_output)
+
+#appending data to the table
+data_dict = {'DEPT_ID' : [9],
+            'DEPT_NAME' : ['Quality Assurance'],
+            'MANAGER_ID' : [30010],
+            'LOC_ID' : ["L0010"]}
+data_append = pd.DataFrame(data_dict)
+data_append.to_sql(table_name, conn, if_exists = 'append', index =False)
+print('Data appended successfully')
+
+#Run the following queries on the Departments Table:
+#a. View all entries
+#b. View only the department names
+#c. Count the total entries
+
+#a. View all entries
+query_statement = f"SELECT * FROM {table_name}"
+query_output = pd.read_sql(query_statement, conn)
+print(query_statement)
+print(query_output)
+
+query_statement = f"SELECT DEPT_NAME FROM {table_name}"
+query_output = pd.read_sql(query_statement, conn)
+print(query_statement)
+print(query_output)
+
+query_statement = f"SELECT COUNT(*) FROM {table_name}"
+query_output = pd.read_sql(query_statement, conn)
+print(query_statement)
+print(query_output)
+
+conn.close()
+
+
